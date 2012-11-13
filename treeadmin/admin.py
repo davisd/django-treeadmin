@@ -11,6 +11,8 @@ from mptt.exceptions import InvalidMove
 
 import logging
 
+from django.views.decorators.csrf import csrf_exempt
+
 
 # ------------------------------------------------------------------------
 def django_boolean_icon(field_val, alt_text=None, title=None):
@@ -323,6 +325,7 @@ class TreeAdmin(admin.ModelAdmin):
     def get_changelist(self, request, **kwargs):
         return ChangeList
 
+    @csrf_exempt
     def changelist_view(self, request, extra_context=None, *args, **kwargs):
         """
         Handle the changelist view, the django view for the model instances
