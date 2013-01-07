@@ -388,6 +388,9 @@ class TreeAdmin(admin.ModelAdmin):
 
         if position in ('last-child', 'left'):
             try:
+                if hasattr(cut_item, 'check_node_move'):
+                    cut_item.check_node_move(pasted_on)
+                self.model._tree_manager.move_node(cut_item, pasted_on, position)
                 self.model._tree_manager.move_node(cut_item, pasted_on, position)
             except InvalidMove, e:
                 self.message_user(request, unicode(e))
