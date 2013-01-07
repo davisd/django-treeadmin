@@ -1,6 +1,7 @@
 from django.conf import settings as django_settings
 from django.contrib import admin
 from django.contrib.admin.views import main
+from django.contrib import messages
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, HttpResponseNotFound, HttpResponseServerError
 from django.utils import simplejson
@@ -393,7 +394,7 @@ class TreeAdmin(admin.ModelAdmin):
                 self.model._tree_manager.move_node(cut_item, pasted_on, position)
                 self.model._tree_manager.move_node(cut_item, pasted_on, position)
             except InvalidMove, e:
-                self.message_user(request, unicode(e))
+                messages.error(request, unicode(e))
                 return HttpResponse('FAIL')
 
             # Ensure that model save has been run
@@ -404,7 +405,7 @@ class TreeAdmin(admin.ModelAdmin):
                 cut_item)
             return HttpResponse('OK')
 
-        self.message_user(request, ugettext('Did not understand moving instruction.'))
+        messages.error(request, ugettext('Did not understand moving instruction.'))
         return HttpResponse('FAIL')
 
     def _actions_column(self, instance):
