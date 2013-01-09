@@ -387,11 +387,18 @@ class TreeAdmin(admin.ModelAdmin):
         pasted_on = self.model.objects.get(pk=request.POST.get('pasted_on'))
         position = request.POST.get('position')
 
+        # get the REAL target.
+        real_target=pasted_on.parent if position == 'left' else pasted_on
+
+        try:
+            if hasattr(cut_item, 'check_node_move'):
+                cut_item.check_node_move(real_target)
+        except InvalidMove, e:
+            messages.error(request, unicode(e))
+            return HttpResponse('FAIL')
+
         if position in ('last-child', 'left'):
             try:
-                if hasattr(cut_item, 'check_node_move'):
-                    cut_item.check_node_move(pasted_on)
-                self.model._tree_manager.move_node(cut_item, pasted_on, position)
                 self.model._tree_manager.move_node(cut_item, pasted_on, position)
             except InvalidMove, e:
                 messages.error(request, unicode(e))
