@@ -397,7 +397,7 @@ class TreeAdmin(admin.ModelAdmin):
             messages.error(request, unicode(e))
             return HttpResponse('FAIL')
 
-        if position in ('last-child', 'left'):
+        if position in ('last-child', 'left', 'right'):
             try:
                 self.model._tree_manager.move_node(cut_item, pasted_on, position)
             except InvalidMove, e:
